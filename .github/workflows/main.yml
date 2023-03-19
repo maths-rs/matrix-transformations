@@ -1,0 +1,156 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        toolchain:
+          - stable
+          - beta
+          - nightly
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: ${{ matrix.toolchain }}
+        override: true
+        profile: minimal
+    - name: Cache dependencies
+      uses: Swatinem/rust-cache@v1.4.0
+      with:
+        sharedKey: full-build-cache
+    - name: Build
+      uses: actions-rs/cargo@v1
+      with:
+        command: build
+        args: --verbose
+
+  test:
+    name: test
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        override: true
+        profile: minimal
+    - name: Cache dependencies
+      uses: Swatinem/rust-cache@v1.4.0
+      with:
+        sharedKey: full-build-cache
+    - name: Run tests
+      uses: actions-rs/tarpaulin@v0.1
+    - name: Run fuzz tests
+      timeout-minutes: 5
+      continue-on-error: true
+      run: |
+        cargo install cargo-fuzz
+        cargo fuzz --version
+        cargo fuzz run fuzz_target_1
+    - name: Upload code coverage
+      uses: codecov/codecov-action@v3
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        verbose: true
+
+  bench:
+    name: bench
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        override: true
+        profile: minimal
+    - name: Install Valgrind
+      run: sudo apt install -y valgrind
+    - name: Run benchmarks
+      uses: actions-rs/cargo@v1
+      with:
+        command: bench
+        args: --no-fail-fast
+
+  fmt:
+    name: rustfmt-check
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+          profile: minimal
+          components: rustfmt
+      - name: Cache dependencies
+        uses: Swatinem/rust-cache@v1.4.0
+        with:
+          sharedKey: full-build-cache
+      - name: Check formatting/code style
+        uses: actions-rs/cargo@v1
+        with:
+          command: fmt
+          args: --all -- --check
+
+  clippy:
+    name: clippy-check
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+          profile: minimal
+          components: clippy
+      - name: Cache dependencies
+        uses: Swatinem/rust-cache@v1.4.0
+        with:
+          sharedKey: full-build-cache
+      - name: Run clippy checks
+        uses: actions-rs/clippy-check@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          args: --all-features
+
+  ci-success:
+    name: ci-success
+    if: ${{ success() }}
+    needs:
+      - build
+      - test
+      - bench
+      - clippy
+      - fmt
+    runs-on: ubuntu-latest
+    steps:
+      - name: ✅ CI succeeded
+        run: exit 0

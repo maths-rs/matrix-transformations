@@ -1,0 +1,12 @@
+{
+	"private": true,
+	"scripts": {
+		"lint:commit": "commitlint --from=HEAD~1 --verbose"
+	},
+	"devDependencies": {
+		"@commitlint/cli": "^17.1.2",
+		"@commitlint/config-conventional": "^17.1.0",
+		"husky": "^8.0.1",
+		"release-please": "^14.11.0"
+	}
+}

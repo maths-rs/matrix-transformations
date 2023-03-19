@@ -1,0 +1,12 @@
+{
+	"private": true,
+	"scripts": {
+		"build": "mdbook build",
+		"start": "mdbook serve",
+		"lint": "markdownlint . --ignore node_modules",
+		"lint:fix": "npm run lint -- --fix"
+	},
+	"dependencies": {
+		"markdownlint-cli": "0.31.1"
+	}
+}
