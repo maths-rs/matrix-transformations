@@ -1,4 +1,4 @@
-use crate::{SelfVectorOps, VectorOps};
+use crate::{Fsize, SelfVectorOps, VectorOps};
 use num::Float;
 use std::ops::{Add, AddAssign, Mul, MulAssign, Sub, SubAssign};
 use std::panic;
@@ -102,6 +102,56 @@ mod test_vec_ops {
 			vec![16.27, 7.05, 8.74, 7.43, 5.01, 13.06, 6.57, 6.51, 14.16],
 			vec_7.vec_add(&vec_8)
 		);
+		assert!(result.is_err());
+		assert!(result_2.is_err());
+		assert!(result_3.is_err());
+		assert!(result_4.is_err());
+	}
+	#[test]
+	fn test_scal_mult() {
+		let vec_1 = vec![1.0, 1.0, 4.0];
+		let vec_2 = vec![2.0, 3.0, 4.1];
+		let vec_3 = vec![3.9, 3.9, 4.0, 3.1];
+		let vec_4 = vec![4.0, 1.1, 4.5, 1.4];
+		let vec_5 = vec![7.91, 8.23, 4.01, 6.70];
+		let vec_6 = vec![0.73, 3.88, 1.42, 1.51];
+
+		assert_eq!(vec![3.0, 3.0, 12.0], vec_1.scal_mult(3.0));
+		assert_eq!(vec![8.0, 12.0, 16.4], vec_2.scal_mult(4.0));
+		assert_eq!(vec![39.0, 39.0, 40.0, 31.0], vec_3.scal_mult(10.0));
+		assert_eq!(vec![-4.0, -1.1, -4.5, -1.4], vec_4.scal_mult(-1.0));
+		assert_eq!(
+			vec![39.55, 41.150000000000006, 20.049999999999997, 33.5],
+			vec_5.scal_mult(5.0)
+		);
+		assert_eq!(vec![-1.46, -7.76, -2.84, -3.02], vec_6.scal_mult(-2.0))
+	}
+	#[test]
+	fn test_dot() {
+		let vec_1 = vec![1.0, 2.0, 3.0];
+		let vec_2 = vec![3.0, 4.0, 4.0];
+
+		let vec_3 = vec![3.12, 4.0, 9.0, 1.12];
+		let vec_4 = vec![-2.0, -1.0, 2.0, 3.0];
+
+		let vec_5 = vec![1.2, 1.3];
+		let vec_6 = vec![3.3, 3.3];
+
+		let vec_7 = vec![1.0, 2.0, 1.0, 1.0, 5.0];
+		let vec_8 = vec![3.0, 4.0, 4.9, 1.4, 4.1];
+
+		let test_fail: Vec<Fsize> = Vec::new();
+		let test_fail_2 = vec![11.4, 12.4];
+		let test_fail_3 = vec![123.0, 3.6, 7.1, 56.144];
+		let result = std::panic::catch_unwind(|| test_fail_2.vec_add(&test_fail));
+		let result_2 = std::panic::catch_unwind(|| test_fail.vec_add(&test_fail_2));
+		let result_3 = std::panic::catch_unwind(|| test_fail_3.vec_add(&test_fail_2));
+		let result_4 = std::panic::catch_unwind(|| test_fail_2.vec_add(&test_fail_3));
+
+		assert_eq!(23.0, vec_1.dot(&vec_2));
+		assert_eq!(11.120000000000001, vec_3.dot(&vec_4));
+		assert_eq!(8.25, vec_5.dot(&vec_6));
+		assert_eq!(37.8, vec_7.dot(&vec_8));
 		assert!(result.is_err());
 		assert!(result_2.is_err());
 		assert!(result_3.is_err());
