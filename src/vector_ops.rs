@@ -1,19 +1,18 @@
-use crate::{Fsize, SelfVectorOps, VectorOps};
+use crate::{SelfVectorOps, VectorOps};
 use num::Float;
-use std::ops::{Add, AddAssign, Mul, MulAssign, Sub, SubAssign};
+use std::ops::{Add, AddAssign, Mul, Sub, SubAssign};
 use std::panic;
 
 impl<T> SelfVectorOps<Vec<T>> for Vec<T>
 where
-	T: AddAssign + SubAssign + Mul<T, Output = T> + Float,
+	T: AddAssign + SubAssign + Mul<T, Output = T> + Float + std::fmt::Debug,
 {
 	type Output = T;
 	fn magnitude(&self) -> T {
-		let mut result: T = self[0];
+		let mut result: T = self[0] - self[0];
 		for i in self.iter() {
 			result += (*i) * (*i);
 		}
-		result -= self[0];
 		return result.sqrt();
 	}
 	fn scalar_components(&self, rhs: &Vec<T>) -> T {
@@ -56,11 +55,11 @@ where
 		} else if self.len() != rhs.len() {
 			panic!("Cant dot product two vectors with different length");
 		}
-		let mut sum: Self::Output = rhs[0];
+		let mut sum: Self::Output = rhs[0] - rhs[0];
 		for i in 0..rhs.len() {
 			sum += self[i] * rhs[i]
 		}
-		return sum - rhs[0];
+		return sum;
 	}
 }
 
@@ -68,7 +67,7 @@ where
 mod test_vec_ops {
 	use crate::{
 		vector_ops::{SelfVectorOps, VectorOps},
-		Fsize, Point2D,
+		Fsize
 	};
 
 	#[test]
@@ -85,7 +84,6 @@ mod test_vec_ops {
 		let vec_7 = vec![8.01, 0.93, 4.29, 6.12, 4.04, 7.19, 3.62, 5.21, 7.74];
 		let vec_8 = vec![8.26, 6.12, 4.45, 1.31, 0.97, 5.87, 2.95, 1.30, 6.42];
 
-		let vec_9: Vec<Fsize> = Vec::new();
 
 		let test_fail: Vec<Fsize> = Vec::new();
 		let test_fail_2 = vec![1.3, 4.4];
@@ -156,5 +154,15 @@ mod test_vec_ops {
 		assert!(result_2.is_err());
 		assert!(result_3.is_err());
 		assert!(result_4.is_err());
+	}
+	#[test]
+	fn test_magnitude() {
+		let vec_1 = vec![1.0, 2.0, 3.0, 4.0];
+		let vec_2 = vec![3.0, 1.3, 4.1];
+		let vec_3 = vec![1.4, 1.4, 14.5, 14.4, 2.0];
+
+		assert_eq!( (30.0 as Fsize).sqrt(), vec_1.magnitude());
+		assert_eq!( (27.5 as Fsize).sqrt(), vec_2.magnitude());
+		assert_eq!(	(425.53 as Fsize).sqrt(), vec_3.magnitude());
 	}
 }
