@@ -9,6 +9,9 @@ where
 {
 	type Output = T;
 	fn magnitude(&self) -> T {
+		if self.len() == 0 {
+			panic!("Cannot get length of a length zero vector")
+		}
 		let mut result: T = self[0] - self[0];
 		for i in self.iter() {
 			result += (*i) * (*i);
@@ -16,7 +19,7 @@ where
 		return result.sqrt();
 	}
 	fn scalar_components(&self, rhs: &Vec<T>) -> T {
-		return self.dot(&rhs) / rhs.magnitude();
+		self.dot(&rhs) / rhs.magnitude()
 	}
 	fn projection(&self, rhs: &Vec<T>) {
 		let scaler: T = self.dot(&rhs) / (rhs.magnitude() * rhs.magnitude());
@@ -138,6 +141,9 @@ mod test_vec_ops {
 		let vec_7 = vec![1.0, 2.0, 1.0, 1.0, 5.0];
 		let vec_8 = vec![3.0, 4.0, 4.9, 1.4, 4.1];
 
+		let vec_9 = vec![5.0, -12.0];
+		let vec_10 = vec![3.0, 4.0];
+
 		let test_fail: Vec<Fsize> = Vec::new();
 		let test_fail_2 = vec![11.4, 12.4];
 		let test_fail_3 = vec![123.0, 3.6, 7.1, 56.144];
@@ -150,6 +156,7 @@ mod test_vec_ops {
 		assert_eq!(11.120000000000001, vec_3.dot(&vec_4));
 		assert_eq!(8.25, vec_5.dot(&vec_6));
 		assert_eq!(37.8, vec_7.dot(&vec_8));
+		assert_eq!(-33.0, vec_9.dot(&vec_10));
 		assert!(result.is_err());
 		assert!(result_2.is_err());
 		assert!(result_3.is_err());
@@ -160,9 +167,28 @@ mod test_vec_ops {
 		let vec_1 = vec![1.0, 2.0, 3.0, 4.0];
 		let vec_2 = vec![3.0, 1.3, 4.1];
 		let vec_3 = vec![1.4, 1.4, 14.5, 14.4, 2.0];
+		let vec_4 = vec![0.0, 0.0, 0.0, 0.0, 0.0];
+		let vec_5 = vec![5.0, -12.0];
+		let vec_6: Vec<Fsize> = Vec::new();
+		let result = std::panic::catch_unwind(|| vec_6.magnitude());
 
 		assert_eq!( (30.0 as Fsize).sqrt(), vec_1.magnitude());
 		assert_eq!( (27.5 as Fsize).sqrt(), vec_2.magnitude());
 		assert_eq!(	(425.53 as Fsize).sqrt(), vec_3.magnitude());
+		assert_eq!(	(0.0 as Fsize).sqrt(), vec_4.magnitude());
+		assert_eq!(	(169.0 as Fsize).sqrt(), vec_5.magnitude());
+		assert!(result.is_err());
+	}
+	#[test]
+	fn test_scalar_components(){
+		let vec_1 = vec![1.0, 3.0];
+		let vec_2 = vec![2.0, 1.0];
+
+		let vec_3 = vec![3.0, 4.0];
+		let vec_4 = vec![5.0, -12.0];
+		
+		
+		assert_eq!( (5.0 as Fsize).sqrt(), vec_1.scalar_components(&vec_2));
+		assert_eq!( (-33.0/13.0 as Fsize), vec_3.scalar_components(&vec_4));
 	}
 }
