@@ -30,12 +30,12 @@ matrix-transformations = "0.0.0"
 * `VectorOps` trait: Implements `vec_scal()`, `vec_add()` and `dot()` for vectors. `dot()` returns a scalar while `vec_scal()`, `vec_add()` return a new vector.
 
 ## How it works
-* `vec_scal()` Multiplies a vector by a scalar. Defined by $c\vec{v} = [ cv_{0} ,cv_{1},cv_{2}... cv_{n-1} ]^{T} \in \mathbb{R}^{n} \quad\forall\vec{v}\in\mathbb{R}^{n},c\in \mathbb{R}$  
-* `vec_add` Adds two vectors together. Define by $\vec{u}+\vec{v} = [ u_{0}+v_{0}, u_{1}+v_{1}, u_{2}+v_{2}...a_{n-1}+b_{n-1}]^{T} \in\mathbb{R}^{n} \quad\forall\vec{u},\vec{v}\in\mathbb{R}^{n}$
-*  `dot()` Performs the dot operation of two vectors. Define as $\vec{u}\cdot\vec{v}= d=\sum_{i=0}^{n-1}u_{i}v_{i} \quad\forall\vec{u}\vec{v}\in\mathbb{R}^{n}, d\in\mathbb{R}$
-* `magnitude()` gets the magnitude of a vector. Defined by $\sqrt{	\sum_{i=0}^{n-1} \vec{v}_{i}^{2} }$
-* `vec_scalar_components()` Finds the scaler component of  $\vec{u}$ along  $\vec{v}$. It is computed with the following formula $\frac{\vec{u} \cdot \vec{v}}{	\vert \vec{v} \vert}$
-* `vec_projection()` Finds the vector projection of $\vec{a}$ onto  $\vec{b}$. It is computed with the following formula $(\frac{\vec{u} \cdot \vec{v}}{	\vert \vec{v} \vert})\vec{v}$
+* `vec_scal()` Multiplies a vector by a scalar. Defined as $$c\vec{v} = [ cv_{0} ,cv_{1},cv_{2}... cv_{n-1} ]^{T} \in \mathbb{R}^{n} \quad\forall\vec{v}\in\mathbb{R}^{n},c\in \mathbb{R}$$  
+* `vec_add` Adds two vectors together. Define as $$\vec{u}+\vec{v} = [ u_{0}+v_{0}, u_{1}+v_{1}, u_{2}+v_{2}...a_{n-1}+b_{n-1}]^{T} \in\mathbb{R}^{n} \quad\forall\vec{u},\vec{v}\in\mathbb{R}^{n}$$
+*  `dot()` Performs the dot operation of two vectors. Define as $$\vec{u}\cdot\vec{v}= d=\sum_{i=0}^{n-1}u_{i}v_{i} \quad\forall\vec{u}\vec{v}\in\mathbb{R}^{n}, d\in\mathbb{R}$$
+* `magnitude()` gets the magnitude of a vector. Defined by $$\sqrt{\sum_{i=0}^{n-1}\vec{v}_{i}^{2} }$$
+* `vec_scalar_components()` Finds the scaler component of  $\vec{u}$ along  $\vec{v}$. It is computed with the following formula $$\frac{\vec{u} \cdot \vec{v}}{	\vert \vec{v} \vert}$$
+* `vec_projection()` Finds the vector projection of $\vec{a}$ onto  $\vec{b}$. It is computed with the following formula $$(\frac{\vec{u} \cdot \vec{v}}{	\vert \vec{v} \vert})\vec{v}$$
 
 ## Examples
 
