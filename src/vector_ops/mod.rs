@@ -1,31 +1,7 @@
-use crate::{SelfVectorOps, VectorOps};
+use crate::{VecScalingProjection, VectorOps};
 use num::Float;
 use std::ops::{Add, AddAssign, Mul, Sub, SubAssign};
 use std::panic;
-
-impl<T> SelfVectorOps<Vec<T>> for Vec<T>
-where
-	T: AddAssign + SubAssign + Mul<T, Output = T> + Float + std::fmt::Debug,
-{
-	type Output = T;
-	fn magnitude(&self) -> T {
-		if self.len() == 0 {
-			panic!("Cannot get length of a length zero vector")
-		}
-		let mut result: T = self[0] - self[0];
-		for i in self.iter() {
-			result += (*i) * (*i);
-		}
-		return result.sqrt();
-	}
-	fn scalar_components(&self, rhs: &Vec<T>) -> T {
-		self.dot(&rhs) / rhs.magnitude()
-	}
-	fn projection(&self, rhs: &Vec<T>) {
-		let scaler: T = self.dot(&rhs) / (rhs.magnitude() * rhs.magnitude());
-		rhs.scal_mult(scaler);
-	}
-}
 
 impl<T> VectorOps<Vec<T>, T> for Vec<T>
 where
@@ -33,7 +9,7 @@ where
 {
 	type Output = T;
 
-	fn scal_mult(&self, scal: T) -> Vec<T> {
+	fn vec_scal(&self, scal: T) -> Vec<T> {
 		let mut result: Vec<T> = Vec::new();
 		for i in self.iter() {
 			result.push((*i) * scal);
@@ -52,6 +28,7 @@ where
 		}
 		return result;
 	}
+
 	fn dot(&self, rhs: &Vec<T>) -> T {
 		if self.len() == 0 || rhs.len() == 0 {
 			panic!("Trying to dot product with a zeroth scaler");
@@ -65,12 +42,35 @@ where
 		return sum;
 	}
 }
-
+impl<T> VecScalingProjection<Vec<T>> for Vec<T>
+where
+	T: AddAssign + SubAssign + Mul<T, Output = T> + Float + std::fmt::Debug,
+{
+	type Output = T;
+	fn magnitude(&self) -> T {
+		if self.len() == 0 {
+			panic!("Cannot get length of a length zero vector")
+		}
+		let mut result: T = self[0] - self[0];
+		for i in self.iter() {
+			result += (*i) * (*i);
+		}
+		return result.sqrt();
+	}
+	fn vec_scalar_components(&self, rhs: &Vec<T>) -> T {
+		self.dot(&rhs) / rhs.magnitude()
+	}
+	fn vec_projection(&self, rhs: &Vec<T>) -> Vec<T> {
+		let rhs_mag: T = rhs.magnitude();
+		let scaler: T = self.dot(&rhs) / (rhs_mag * rhs_mag);
+		rhs.vec_scal(scaler)
+	}
+}
 #[cfg(test)]
 mod test_vec_ops {
 	use crate::{
-		vector_ops::{SelfVectorOps, VectorOps},
-		Fsize
+		vector_ops::{VecScalingProjection, VectorOps},
+		Fsize,
 	};
 
 	#[test]
@@ -86,7 +86,6 @@ mod test_vec_ops {
 
 		let vec_7 = vec![8.01, 0.93, 4.29, 6.12, 4.04, 7.19, 3.62, 5.21, 7.74];
 		let vec_8 = vec![8.26, 6.12, 4.45, 1.31, 0.97, 5.87, 2.95, 1.30, 6.42];
-
 
 		let test_fail: Vec<Fsize> = Vec::new();
 		let test_fail_2 = vec![1.3, 4.4];
@@ -117,15 +116,15 @@ mod test_vec_ops {
 		let vec_5 = vec![7.91, 8.23, 4.01, 6.70];
 		let vec_6 = vec![0.73, 3.88, 1.42, 1.51];
 
-		assert_eq!(vec![3.0, 3.0, 12.0], vec_1.scal_mult(3.0));
-		assert_eq!(vec![8.0, 12.0, 16.4], vec_2.scal_mult(4.0));
-		assert_eq!(vec![39.0, 39.0, 40.0, 31.0], vec_3.scal_mult(10.0));
-		assert_eq!(vec![-4.0, -1.1, -4.5, -1.4], vec_4.scal_mult(-1.0));
+		assert_eq!(vec![3.0, 3.0, 12.0], vec_1.vec_scal(3.0));
+		assert_eq!(vec![8.0, 12.0, 16.4], vec_2.vec_scal(4.0));
+		assert_eq!(vec![39.0, 39.0, 40.0, 31.0], vec_3.vec_scal(10.0));
+		assert_eq!(vec![-4.0, -1.1, -4.5, -1.4], vec_4.vec_scal(-1.0));
 		assert_eq!(
 			vec![39.55, 41.150000000000006, 20.049999999999997, 33.5],
-			vec_5.scal_mult(5.0)
+			vec_5.vec_scal(5.0)
 		);
-		assert_eq!(vec![-1.46, -7.76, -2.84, -3.02], vec_6.scal_mult(-2.0))
+		assert_eq!(vec![-1.46, -7.76, -2.84, -3.02], vec_6.vec_scal(-2.0))
 	}
 	#[test]
 	fn test_dot() {
@@ -144,6 +143,9 @@ mod test_vec_ops {
 		let vec_9 = vec![5.0, -12.0];
 		let vec_10 = vec![3.0, 4.0];
 
+		let vec_11 = vec![4.0, 6.0, 7.0, 8.0];
+		let vec_12 = vec![2.0, 1.0, 1.0, 2.0];
+
 		let test_fail: Vec<Fsize> = Vec::new();
 		let test_fail_2 = vec![11.4, 12.4];
 		let test_fail_3 = vec![123.0, 3.6, 7.1, 56.144];
@@ -157,6 +159,7 @@ mod test_vec_ops {
 		assert_eq!(8.25, vec_5.dot(&vec_6));
 		assert_eq!(37.8, vec_7.dot(&vec_8));
 		assert_eq!(-33.0, vec_9.dot(&vec_10));
+		assert_eq!(37.0, vec_11.dot(&vec_12));
 		assert!(result.is_err());
 		assert!(result_2.is_err());
 		assert!(result_3.is_err());
@@ -169,26 +172,59 @@ mod test_vec_ops {
 		let vec_3 = vec![1.4, 1.4, 14.5, 14.4, 2.0];
 		let vec_4 = vec![0.0, 0.0, 0.0, 0.0, 0.0];
 		let vec_5 = vec![5.0, -12.0];
-		let vec_6: Vec<Fsize> = Vec::new();
-		let result = std::panic::catch_unwind(|| vec_6.magnitude());
+		let vec_6 = vec![2.0, 1.0, 1.0, 2.0];
 
-		assert_eq!( (30.0 as Fsize).sqrt(), vec_1.magnitude());
-		assert_eq!( (27.5 as Fsize).sqrt(), vec_2.magnitude());
-		assert_eq!(	(425.53 as Fsize).sqrt(), vec_3.magnitude());
-		assert_eq!(	(0.0 as Fsize).sqrt(), vec_4.magnitude());
-		assert_eq!(	(169.0 as Fsize).sqrt(), vec_5.magnitude());
+		let empty: Vec<Fsize> = Vec::new();
+		let result = std::panic::catch_unwind(|| empty.magnitude());
+
+		assert_eq!((30.0 as Fsize).sqrt(), vec_1.magnitude());
+		assert_eq!((27.5 as Fsize).sqrt(), vec_2.magnitude());
+		assert_eq!((425.53 as Fsize).sqrt(), vec_3.magnitude());
+		assert_eq!((0.0 as Fsize).sqrt(), vec_4.magnitude());
+		assert_eq!((169.0 as Fsize).sqrt(), vec_5.magnitude());
+		assert_eq!((10.0 as Fsize).sqrt(), vec_6.magnitude());
 		assert!(result.is_err());
 	}
 	#[test]
-	fn test_scalar_components(){
+	fn test_scalar_components() {
 		let vec_1 = vec![1.0, 3.0];
 		let vec_2 = vec![2.0, 1.0];
 
 		let vec_3 = vec![3.0, 4.0];
 		let vec_4 = vec![5.0, -12.0];
-		
-		
-		assert_eq!( (5.0 as Fsize).sqrt(), vec_1.scalar_components(&vec_2));
-		assert_eq!( (-33.0/13.0 as Fsize), vec_3.scalar_components(&vec_4));
+
+		let vec_5 = vec![4.0, 6.0, 7.0, 8.0];
+		let vec_6 = vec![2.0, 1.0, 1.0, 2.0];
+
+		assert_eq!((5.0 as Fsize).sqrt(), vec_1.vec_scalar_components(&vec_2));
+		assert_eq!((-33.0 / 13.0 as Fsize), vec_3.vec_scalar_components(&vec_4));
+		assert_eq!(
+			((37.0 as Fsize) / ((10.0 as Fsize).sqrt())),
+			vec_5.vec_scalar_components(&vec_6)
+		);
+	}
+	#[test]
+	fn test_vector_projection() {
+		let vec_1 = vec![1.0, 3.0];
+		let vec_2 = vec![2.0, 1.0];
+
+		let vec_3 = vec![1.0, 2.0];
+		let vec_4 = vec![-3.0, 4.0];
+
+		let vec_5 = vec![-1.0, 4.0, 2.0];
+		let vec_6 = vec![1.0, 0.0, 3.0];
+
+		assert_eq!(
+			vec![1.9999999999999996, 0.9999999999999998],
+			vec_1.vec_projection(&vec_2)
+		);
+		assert_eq!(
+			vec![-0.6000000000000001, 4.0 / 5.0],
+			vec_3.vec_projection(&vec_4)
+		);
+		assert_eq!(
+			vec![0.4999999999999999, 0.0, 1.4999999999999996],
+			vec_5.vec_projection(&vec_6)
+		);
 	}
 }

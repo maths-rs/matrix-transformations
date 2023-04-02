@@ -1,5 +1,5 @@
 [package]
-name = "rust-template"
+name = "matrix_transformations"
 version = "0.1.0"
 authors = [
 	"First Name Last Name, <yourname@gmail.com>",

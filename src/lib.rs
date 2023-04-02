@@ -1,6 +1,6 @@
 #[doc = include_str!("../README.md")]
 mod matrix_operations;
-mod vector_ops;
+pub mod vector_ops;
 
 #[cfg(target_pointer_width = "64")]
 pub type Fsize = f64;
@@ -25,16 +25,15 @@ pub const I4: Matrix3D = [
 
 pub const I3: Matrix2D = [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]];
 
-pub trait SelfVectorOps<Rhs> {
-	type Output;
-	fn magnitude(&self) -> Self::Output;
-	fn scalar_components(&self, rhs: &Rhs) -> Self::Output;
-	fn projection(&self, rhs: &Rhs);
-}
-
 pub trait VectorOps<Rhs, A> {
 	type Output;
-	fn scal_mult(&self, scal: A) -> Vec<Self::Output>;
+	fn vec_scal(&self, scal: A) -> Vec<Self::Output>;
 	fn vec_add(&self, rhs: &Rhs) -> Vec<Self::Output>;
 	fn dot(&self, rhs: &Rhs) -> Self::Output;
+}
+pub trait VecScalingProjection<Rhs> {
+	type Output;
+	fn magnitude(&self) -> Self::Output;
+	fn vec_scalar_components(&self, rhs: &Rhs) -> Self::Output;
+	fn vec_projection(&self, rhs: &Rhs) -> Vec<Self::Output>;
 }
