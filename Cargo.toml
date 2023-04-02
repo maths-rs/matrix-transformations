@@ -1,11 +1,10 @@
 [package]
 name = "matrix_transformations"
-version = "0.1.0"
+version = "0.0.0"
 authors = [
-	"First Name Last Name, <yourname@gmail.com>",
-	"Another Person <anotherperson@outlook.com>"
+	"Alfredo Gutierrez, <icealfredo123@gmail.com>"
 ]
-description = "Your description of the Rust library"
+description = "Provides various matrix/vector operations"
 readme = "README.md"
 license = "MIT OR Apache-2.0"
 edition = "2021"
