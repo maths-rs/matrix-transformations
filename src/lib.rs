@@ -37,3 +37,16 @@ pub trait VecScalingProjection<Rhs> {
 	fn vec_scalar_components(&self, rhs: &Rhs) -> Self::Output;
 	fn vec_projection(&self, rhs: &Rhs) -> Vec<Self::Output>;
 }
+
+pub trait MatrixOperations<Rhs, Rhs2, Rhs3> {
+	type Output;
+	fn add_matrix(&self, rhs: &Rhs) -> Vec<Vec<Self::Output>>;
+	fn matrix_mult_matrix(&self, rhs: &Rhs) -> Vec<Vec<Self::Output>>;
+	fn matrix_mult_point(&self, rhs: &Rhs2) -> Vec<Self::Output>;
+	fn scaler_mult_matrix(&self, rhs: Rhs3) -> Vec<Vec<Self::Output>>;
+}
+
+pub trait PointOperations<Rhs, Rhs2> {
+	type Output;
+	fn scaler_mult_point(&self, rhs: Rhs2) -> Vec<Self::Output>;
+}

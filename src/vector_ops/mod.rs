@@ -2,6 +2,7 @@ use crate::{VecScalingProjection, VectorOps};
 use num::Float;
 use std::ops::{Add, AddAssign, Mul, Sub, SubAssign};
 use std::panic;
+mod vec_matrix_ops;
 
 impl<T> VectorOps<Vec<T>, T> for Vec<T>
 where
@@ -66,6 +67,7 @@ where
 		rhs.vec_scal(scaler)
 	}
 }
+
 #[cfg(test)]
 mod test_vec_ops {
 	use crate::{
