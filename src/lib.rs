@@ -1,6 +1,6 @@
 #[doc = include_str!("../README.md")]
 mod matrix_operations;
-pub mod vector_ops;
+pub mod vector_operations;
 
 #[cfg(target_pointer_width = "64")]
 pub type Fsize = f64;
