@@ -29,7 +29,7 @@ where
 
 #[cfg(test)]
 mod test_vec_ops {
-	use crate::{VecScalingProjection, Fsize};
+	use crate::{Fsize, VecScalingProjection};
 	#[test]
 	fn test_magnitude() {
 		let vec_1 = vec![1.0, 2.0, 3.0, 4.0];

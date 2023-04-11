@@ -1,10 +1,10 @@
 use crate::VectorOps;
 use std::ops::{Add, AddAssign, Mul, Sub};
 
-pub(crate) fn iter(length: usize){
-    for i in 0..length{
-        //some operation
-    }
+pub(crate) fn iter(length: usize) {
+	for i in 0..length {
+		//some operation
+	}
 }
 
 impl<T> VectorOps<Vec<T>, T> for Vec<T>
@@ -49,7 +49,7 @@ where
 
 #[cfg(test)]
 mod test_vec_ops {
-	use crate::{VectorOps, Fsize};
+	use crate::{Fsize, VectorOps};
 
 	#[test]
 	fn test_vec_add() {
