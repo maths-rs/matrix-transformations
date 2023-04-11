@@ -255,6 +255,18 @@ mod test_overload {
 			vec![4.0, 5.0, 6.0],
 			vec![7.0, 8.0, 9.0],
 		];
+		let matrix_c = vec![vec![10.0, 15.0, 20.0]];
+
+		let matrix_d = vec![
+			vec![15.5, 1.9, 2.9],
+			vec![1.4, 1.5, 15.5],
+			vec![1.4, 4.5, 14.4],
+		];
+		let matrix_e = vec![
+			vec![15.5, 1.9, 2.9, 12.3, 55.1],
+			vec![1.4, 1.5, 15.5, 14.13, 134.14],
+		];
+
 		assert_eq!(
 			vec![
 				vec![3.0, 3.0, 3.0],
@@ -271,5 +283,48 @@ mod test_overload {
 			],
 			matrix_b.scaler_mult_matrix(3.0)
 		);
+		assert_eq!(
+			vec![vec![50.0, 75.0, 100.0],],
+			matrix_c.scaler_mult_matrix(5.0)
+		);
+		assert_eq!(
+			vec![
+				vec![108.5, 13.299999999999999, 20.3],
+				vec![9.799999999999999, 10.5, 108.5],
+				vec![9.799999999999999, 31.5, 100.8]
+			],
+			matrix_d.scaler_mult_matrix(7.0)
+		);
+		//vec![15.5, 1.9, 2.9, 12.3, 55.1],
+		//vec![1.4, 1.5, 15.5, 14.13, 134.14],
+		assert_eq!(
+			vec![
+				vec![34.1, 4.18, 6.38, 27.060000000000002, 121.22000000000001],
+				vec![3.08, 3.3000000000000003, 34.1, 31.086000000000006, 295.108]
+			],
+			matrix_e.scaler_mult_matrix(2.2)
+		);
+	}
+	#[test]
+	fn test_vec_matrix_mult_point() {
+		let matrix_a = vec![
+			vec![3.0, 4.0, 6.0],
+			vec![2.5, 7.0, 8.0],
+			vec![9.0, 22.0, 45.0],
+		];
+		let point_a = vec![7.0, 6.0, 21.0];
+
+		let matrix_b = vec![vec![7.0, 6.0, 4.0, 2.0], vec![1.0, 2.0, 1.0, 2.0]];
+		let point_b = vec![6.0, 4.0, 1.0, 2.0];
+
+		let matrix_c = vec![vec![6.0, 2.5], vec![3.8, 7.9]];
+		let point_c = vec![8.0, 9.5];
+
+		assert_eq!(
+			vec![171.0, 227.5, 1140.0],
+			matrix_a.matrix_mult_point(&point_a)
+		);
+		assert_eq!(vec![74.0, 19.0], matrix_b.matrix_mult_point(&point_b));
+		assert_eq!(vec![71.75, 105.44999999999999], matrix_c.matrix_mult_point(&point_c))
 	}
 }
