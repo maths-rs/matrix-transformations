@@ -1,4 +1,4 @@
-use crate::{VecScalingProjection, VectorOps};
+use crate::{single_for_loop_operation, VecScalingProjection, VectorOps};
 use num::Float;
 use std::ops::{AddAssign, Mul, SubAssign};
 
@@ -12,10 +12,9 @@ where
 			panic!("Cannot get length of a length zero vector")
 		}
 		let mut result: T = self[0] - self[0];
-		for i in self.iter() {
-			result += (*i) * (*i);
-		}
-		return result.sqrt();
+		let magnitude_vec_op = |index: usize| result += self[index] * self[index];
+		single_for_loop_operation(self.len(), magnitude_vec_op);
+		result.sqrt()
 	}
 	fn vec_scalar_components(&self, rhs: &Vec<T>) -> T {
 		self.dot(&rhs) / rhs.magnitude()

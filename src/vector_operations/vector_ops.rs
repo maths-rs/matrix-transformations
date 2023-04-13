@@ -1,11 +1,5 @@
-use crate::VectorOps;
+use crate::{single_for_loop_operation, VectorOps};
 use std::ops::{Add, AddAssign, Mul, Sub};
-
-pub(crate) fn iter(length: usize) {
-	for i in 0..length {
-		//some operation
-	}
-}
 
 impl<T> VectorOps<Vec<T>, T> for Vec<T>
 where
@@ -15,10 +9,9 @@ where
 
 	fn vec_scal(&self, scal: T) -> Vec<T> {
 		let mut result: Vec<T> = Vec::new();
-		for i in 0..self.len() {
-			result.push(self[i] * scal);
-		}
-		return result;
+		let scal_vec_op = |index: usize| result.push(self[index] * scal);
+		single_for_loop_operation(self.len(), scal_vec_op);
+		result
 	}
 	fn vec_add(&self, rhs: &Vec<T>) -> Vec<T> {
 		if self.len() == 0 || rhs.len() == 0 {
@@ -27,10 +20,9 @@ where
 			panic!("Cant add two vectors with different length");
 		}
 		let mut result: Vec<T> = Vec::new();
-		for i in 0..rhs.len() {
-			result.push(self[i] + rhs[i])
-		}
-		return result;
+		let add_vec_op = |index: usize| result.push(self[index] + rhs[index]);
+		single_for_loop_operation(self.len(), add_vec_op);
+		result
 	}
 
 	fn dot(&self, rhs: &Vec<T>) -> T {
@@ -40,10 +32,9 @@ where
 			panic!("Cant dot product two vectors with different length");
 		}
 		let mut sum: Self::Output = rhs[0] - rhs[0];
-		for i in 0..rhs.len() {
-			sum += self[i] * rhs[i]
-		}
-		return sum;
+		let dot_vec_op = |index: usize| sum += self[index] * rhs[index];
+		single_for_loop_operation(self.len(), dot_vec_op);
+		sum
 	}
 }
 

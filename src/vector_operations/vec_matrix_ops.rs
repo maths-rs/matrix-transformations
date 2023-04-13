@@ -325,6 +325,9 @@ mod test_overload {
 			matrix_a.matrix_mult_point(&point_a)
 		);
 		assert_eq!(vec![74.0, 19.0], matrix_b.matrix_mult_point(&point_b));
-		assert_eq!(vec![71.75, 105.44999999999999], matrix_c.matrix_mult_point(&point_c))
+		assert_eq!(
+			vec![71.75, 105.44999999999999],
+			matrix_c.matrix_mult_point(&point_c)
+		)
 	}
 }

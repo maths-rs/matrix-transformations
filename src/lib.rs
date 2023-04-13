@@ -52,3 +52,13 @@ pub trait PointOperations<Rhs, Rhs2> {
 	fn point_minus_point(&self, rhs: Rhs) -> Vec<Self::Output>;
 	fn point_plus_vector(&self) -> Vec<Self::Output>;
 }
+
+//for loop used to perform operations which only require one for loop
+pub(crate) fn single_for_loop_operation<F>(length: usize, mut operation_function: F)
+where
+	F: FnMut(usize),
+{
+	for i in 0..length {
+		operation_function(i);
+	}
+}
