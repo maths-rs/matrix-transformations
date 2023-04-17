@@ -15,7 +15,7 @@ where
 		let row_length: usize = rhs.len();
 		let column_length: usize = rhs[0].len();
 
-		let matrix_add_matrix = |row_vec: &mut Vec<T>, row: usize, column: usize| {
+		let matrix_add_matrix_op = |row_vec: &mut Vec<T>, row: usize, column: usize| {
 			row_vec.push(self[row][column] + rhs[row][column])
 		};
 		double_for_loop_operation(row_length, column_length, matrix_add_matrix)
@@ -28,7 +28,7 @@ where
 		let row_length = self.len();
 		let column_length = rhs[0].len();
 
-		let matrix_add_matrix = |row_vec: &mut Vec<T>, row: usize, column: usize| {
+		let matrix_mult_matrix_op = |row_vec: &mut Vec<T>, row: usize, column: usize| {
 			let mut temp = self[0][0] - self[0][0];
 			for index in 0..column_length {
 				temp += self[row][index] * rhs[index][column];
@@ -43,7 +43,7 @@ where
 		}
 		let mut point: Vec<T> = Vec::with_capacity(self[0].len());
 
-		let dot_vec_op = |row: usize| {
+		let matrix_mult_point_op = |row: usize| {
 			let mut temp = self[0][0] - self[0][0];
 			for column in 0..self[0].len() {
 				temp += self[row][column] * rhs[column];
@@ -57,7 +57,7 @@ where
 		let row_length: usize = self.len();
 		let column_length: usize = self[0].len();
 
-		let matrix_add_matrix =
+		let scaler_mult_matrix_op =
 			|row_vec: &mut Vec<T>, row: usize, column: usize| row_vec.push(self[row][column] * rhs);
 		double_for_loop_operation(row_length, column_length, matrix_add_matrix)
 	}
