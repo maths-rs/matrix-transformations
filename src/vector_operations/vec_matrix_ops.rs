@@ -1,4 +1,4 @@
-use crate::MatrixOperations;
+use crate::{double_for_loop_operation, single_for_loop_operation, MatrixOperations};
 use std::ops::{Add, AddAssign, Mul, Sub};
 
 impl<T> MatrixOperations<Vec<Vec<T>>, Vec<T>, T> for Vec<Vec<T>>
@@ -15,63 +15,51 @@ where
 		let row_length: usize = rhs.len();
 		let column_length: usize = rhs[0].len();
 
-		let mut matrix: Vec<Vec<T>> = Vec::with_capacity(row_length);
-		for row in 0..row_length {
-			let mut vec_row: Vec<T> = Vec::with_capacity(column_length);
-			for column in 0..column_length {
-				vec_row.push(self[row][column] + rhs[row][column])
-			}
-			matrix.push(vec_row);
-		}
-		return matrix;
+		let matrix_add_matrix = |row_vec: &mut Vec<T>, row: usize, column: usize| {
+			row_vec.push(self[row][column] + rhs[row][column])
+		};
+		double_for_loop_operation(row_length, column_length, matrix_add_matrix)
 	}
 	fn matrix_mult_matrix(&self, rhs: &Vec<Vec<T>>) -> Vec<Vec<T>> {
 		if self[0].len() != rhs.len() {
 			panic!("Self matrix columns length does not match rhs row count")
 		}
 
-		let rows_length = self.len();
+		let row_length = self.len();
 		let column_length = rhs[0].len();
-		let mut matrix: Vec<Vec<T>> = Vec::with_capacity(rows_length);
-		for row in 0..rows_length {
-			let mut row_vec: Vec<T> = Vec::with_capacity(self.len());
-			for column in 0..column_length {
-				let mut temp = self[0][0] - self[0][0];
-				for index in 0..column_length {
-					temp += self[row][index] * rhs[index][column];
-				}
-				row_vec.push(temp);
+
+		let matrix_add_matrix = |row_vec: &mut Vec<T>, row: usize, column: usize| {
+			let mut temp = self[0][0] - self[0][0];
+			for index in 0..column_length {
+				temp += self[row][index] * rhs[index][column];
 			}
-			matrix.push(row_vec);
-		}
-		matrix
+			row_vec.push(temp);
+		};
+		double_for_loop_operation(row_length, column_length, matrix_add_matrix)
 	}
 	fn matrix_mult_point(&self, rhs: &Vec<T>) -> Vec<T> {
 		if self[0].len() != rhs.len() {
 			panic!("Self matrix columns length does not match rhs row count")
 		}
 		let mut point: Vec<T> = Vec::with_capacity(self[0].len());
-		for row in 0..self.len() {
+
+		let dot_vec_op = |row: usize| {
 			let mut temp = self[0][0] - self[0][0];
 			for column in 0..self[0].len() {
 				temp += self[row][column] * rhs[column];
 			}
 			point.push(temp);
-		}
+		};
+		single_for_loop_operation(self.len(), dot_vec_op);
 		point
 	}
 	fn scaler_mult_matrix(&self, rhs: T) -> Vec<Vec<T>> {
 		let row_length: usize = self.len();
 		let column_length: usize = self[0].len();
-		let mut matrix: Vec<Vec<T>> = Vec::with_capacity(row_length);
-		for row in 0..row_length {
-			let mut vec_row: Vec<T> = Vec::with_capacity(column_length);
-			for column in 0..column_length {
-				vec_row.push(self[row][column] * rhs);
-			}
-			matrix.push(vec_row);
-		}
-		matrix
+
+		let matrix_add_matrix =
+			|row_vec: &mut Vec<T>, row: usize, column: usize| row_vec.push(self[row][column] * rhs);
+		double_for_loop_operation(row_length, column_length, matrix_add_matrix)
 	}
 }
 

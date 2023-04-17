@@ -1,6 +1,6 @@
 #[doc = include_str!("../README.md")]
-mod matrix_operations;
 pub mod vector_operations;
+use std::ops::{Add, AddAssign, Mul, Sub};
 
 #[cfg(target_pointer_width = "64")]
 pub type Fsize = f64;
@@ -61,4 +61,24 @@ where
 	for i in 0..length {
 		operation_function(i);
 	}
+}
+
+pub(crate) fn double_for_loop_operation<F, T>(
+	row_length: usize,
+	column_length: usize,
+	operation_function: F,
+) -> Vec<Vec<T>>
+where
+	F: Fn(&mut Vec<T>, usize, usize),
+	T: Add<T, Output = T> + Sub<T, Output = T> + Mul<T, Output = T> + AddAssign + Copy,
+{
+	let mut matrix: Vec<Vec<T>> = Vec::with_capacity(row_length);
+	for row in 0..row_length {
+		let mut vec_row: Vec<T> = Vec::with_capacity(column_length);
+		for column in 0..column_length {
+			operation_function(&mut vec_row, row, column);
+		}
+		matrix.push(vec_row);
+	}
+	return matrix;
 }
