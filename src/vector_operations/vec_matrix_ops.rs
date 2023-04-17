@@ -18,7 +18,7 @@ where
 		let matrix_add_matrix_op = |row_vec: &mut Vec<T>, row: usize, column: usize| {
 			row_vec.push(self[row][column] + rhs[row][column])
 		};
-		double_for_loop_operation(row_length, column_length, matrix_add_matrix)
+		double_for_loop_operation(row_length, column_length, matrix_add_matrix_op)
 	}
 	fn matrix_mult_matrix(&self, rhs: &Vec<Vec<T>>) -> Vec<Vec<T>> {
 		if self[0].len() != rhs.len() {
@@ -35,7 +35,7 @@ where
 			}
 			row_vec.push(temp);
 		};
-		double_for_loop_operation(row_length, column_length, matrix_add_matrix)
+		double_for_loop_operation(row_length, column_length, matrix_mult_matrix_op)
 	}
 	fn matrix_mult_point(&self, rhs: &Vec<T>) -> Vec<T> {
 		if self[0].len() != rhs.len() {
@@ -50,7 +50,7 @@ where
 			}
 			point.push(temp);
 		};
-		single_for_loop_operation(self.len(), dot_vec_op);
+		single_for_loop_operation(self.len(), matrix_mult_point_op);
 		point
 	}
 	fn scaler_mult_matrix(&self, rhs: T) -> Vec<Vec<T>> {
@@ -59,7 +59,7 @@ where
 
 		let scaler_mult_matrix_op =
 			|row_vec: &mut Vec<T>, row: usize, column: usize| row_vec.push(self[row][column] * rhs);
-		double_for_loop_operation(row_length, column_length, matrix_add_matrix)
+		double_for_loop_operation(row_length, column_length, scaler_mult_matrix_op)
 	}
 }
 
