@@ -48,9 +48,9 @@ pub trait MatrixOperations<Rhs, Rhs2, Rhs3> {
 
 pub trait PointOperations<Rhs, Rhs2> {
 	type Output;
-	fn scaler_mult_point(&self, rhs: Rhs2) -> Vec<Self::Output>;
-	fn point_minus_point(&self, rhs: Rhs) -> Vec<Self::Output>;
-	fn point_plus_vector(&self) -> Vec<Self::Output>;
+	fn point_mult_scaler(&self, rhs: Rhs2) -> Vec<Self::Output>;
+	fn point_minus_point(&self, rhs: &Rhs) -> Vec<Self::Output>;
+	fn point_plus_vector(&self, rhs: &Rhs) -> Vec<Self::Output>;
 }
 
 //for loop used to perform operations which only require one for loop
