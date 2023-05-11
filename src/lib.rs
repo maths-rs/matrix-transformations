@@ -10,6 +10,7 @@ pub type Fsize = f32;
 pub type VectorSD = Vec<Fsize>;
 pub type VectorMD = Vec<Vec<Fsize>>;
 
+
 pub type Matrix3D = [[Fsize; 4]; 4];
 pub type Matrix2D = [[Fsize; 3]; 3];
 
@@ -63,6 +64,7 @@ where
 	}
 }
 
+//for loop used to perform operations which require two for loops
 pub(crate) fn double_for_loop_operation<F, T>(
 	row_length: usize,
 	column_length: usize,
