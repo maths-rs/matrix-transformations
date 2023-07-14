@@ -20,6 +20,9 @@ where
 		};
 		double_for_loop_operation(row_length, column_length, matrix_add_matrix_op)
 	}
+
+	#[allow(clippy::eq_op)]
+	#[allow(clippy::needless_range_loop)]
 	fn matrix_mult_matrix(&self, rhs: &Vec<Vec<T>>) -> Vec<Vec<T>> {
 		if self[0].len() != rhs.len() {
 			panic!("Self matrix columns length does not match rhs row count")
@@ -37,6 +40,9 @@ where
 		};
 		double_for_loop_operation(row_length, column_length, matrix_mult_matrix_op)
 	}
+
+	#[allow(clippy::eq_op)]
+	#[allow(clippy::needless_range_loop)]
 	fn matrix_mult_point(&self, rhs: &Vec<T>) -> Vec<T> {
 		if self[0].len() != rhs.len() {
 			panic!("Self matrix columns length does not match rhs row count")

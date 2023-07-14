@@ -10,7 +10,6 @@ pub type Fsize = f32;
 pub type VectorSD = Vec<Fsize>;
 pub type VectorMD = Vec<Vec<Fsize>>;
 
-
 pub type Matrix3D = [[Fsize; 4]; 4];
 pub type Matrix2D = [[Fsize; 3]; 3];
 
@@ -82,5 +81,5 @@ where
 		}
 		matrix.push(vec_row);
 	}
-	return matrix;
+	matrix
 }

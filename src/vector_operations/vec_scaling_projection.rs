@@ -7,8 +7,10 @@ where
 	T: AddAssign + SubAssign + Mul<T, Output = T> + Float + std::fmt::Debug,
 {
 	type Output = T;
+
+	#[allow(clippy::eq_op)]
 	fn magnitude(&self) -> T {
-		if self.len() == 0 {
+		if self.is_empty() {
 			panic!("Cannot get length of a length zero vector")
 		}
 		let mut result: T = self[0] - self[0];
@@ -17,11 +19,11 @@ where
 		result.sqrt()
 	}
 	fn vec_scalar_components(&self, rhs: &Vec<T>) -> T {
-		self.dot(&rhs) / rhs.magnitude()
+		self.dot(rhs) / rhs.magnitude()
 	}
 	fn vec_projection(&self, rhs: &Vec<T>) -> Vec<T> {
 		let rhs_mag: T = rhs.magnitude();
-		let scaler: T = self.dot(&rhs) / (rhs_mag * rhs_mag);
+		let scaler: T = self.dot(rhs) / (rhs_mag * rhs_mag);
 		rhs.vec_scal(scaler)
 	}
 }
