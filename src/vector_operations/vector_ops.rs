@@ -14,7 +14,7 @@ where
 		result
 	}
 	fn vec_add(&self, rhs: &Vec<T>) -> Vec<T> {
-		if self.len() == 0 || rhs.len() == 0 {
+		if self.is_empty() || rhs.is_empty() {
 			panic!("Cannot add a vector with zero elements");
 		} else if self.len() != rhs.len() {
 			panic!("Cant add two vectors with different length");
@@ -25,8 +25,9 @@ where
 		result
 	}
 
+	#[allow(clippy::eq_op)]
 	fn dot(&self, rhs: &Vec<T>) -> T {
-		if self.len() == 0 || rhs.len() == 0 {
+		if self.is_empty() || rhs.is_empty() {
 			panic!("Trying to dot product with a zeroth scaler");
 		} else if self.len() != rhs.len() {
 			panic!("Cant dot product two vectors with different length");

@@ -9,6 +9,19 @@ readme = "README.md"
 license = "MIT OR Apache-2.0"
 edition = "2021"
 rust-version = "1.63.0"
+exclude = [
+	".devcontainer",
+	".github",
+	".vscode",
+	".idea",
+	"deny.toml",
+	".commitlintrc.json",
+	"package.json",
+	"package-lock.json",
+	"fuzz",
+	"book",
+	"benches",
+]
 
 [dependencies]
 num = "0.4"

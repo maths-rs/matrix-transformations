@@ -20,6 +20,11 @@ ignore = [
 	# ansi_term is unmaintained, but it does exactly what it needs to and no more
 	# so no reason to change just for the sake of it
 	"RUSTSEC-2021-0139",
+	# atty is unmaintained, but the only issue for which we're affected by is
+	# the criterion crate, which only runs for performance bencharmks and therefore
+	# a false positive
+	# see: https://rustsec.org/advisories/RUSTSEC-2021-0145
+	"RUSTSEC-2021-0145"
 ]
 
 [bans]

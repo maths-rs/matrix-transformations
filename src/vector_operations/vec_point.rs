@@ -7,23 +7,24 @@ where
 {
 	type Output = T;
 	fn point_mult_scaler(&self, rhs: T) -> Vec<T> {
-		if self.len() == 0 { panic!("Cannot multiply a point of no dimensions");
+		if self.is_empty() {
+			panic!("Cannot multiply a point of no dimensions");
 		}
 		let mut point: Vec<T> = Vec::with_capacity(self.len());
 		let scal_mult_point_op = |index: usize| point.push(self[index] * rhs);
 		single_for_loop_operation(self.len(), scal_mult_point_op);
-		return point;
+		point
 	}
 	fn point_minus_point(&self, rhs: &Vec<T>) -> Vec<T> {
 		if self.len() != rhs.len() {
 			panic!("Dimensions of points do not match");
-		} else if self.len() == 0 || rhs.len() == 0 {
+		} else if self.is_empty() || rhs.is_empty() {
 			panic!("Point of zero dimensinality")
 		}
 		let mut point: Vec<T> = Vec::with_capacity(self.len());
 		let point_minus_point_op = |index: usize| point.push(self[index] - rhs[index]);
 		single_for_loop_operation(self.len(), point_minus_point_op);
-		return point;
+		point
 	}
 	fn point_plus_vector(&self, rhs: &Vec<T>) -> Vec<T> {
 		if self.len() != rhs.len() {
@@ -32,7 +33,7 @@ where
 		let mut point: Vec<T> = Vec::with_capacity(self.len());
 		let point_plut_vector_op = |index: usize| point.push(self[index] + rhs[index]);
 		single_for_loop_operation(self.len(), point_plut_vector_op);
-		return point;
+		point
 	}
 }
 
@@ -90,26 +91,26 @@ mod test_vec_point_rs {
 	fn test_point_plus_vector() {
 		let point_a: Vec<Fsize> = vec![1.0, 2.0, 3.0, 0.0];
 		let point_b: Vec<Fsize> = vec![3.5, 2.0, 1.0];
-        let point_c: Vec<Fsize> = vec![0.5, 3.5, 1.5];
-        let point_d: Vec<Fsize> = vec![2.4, 2.0, 1.4];
-        let point_e: Vec<Fsize> = vec![1.0, 2.0, 0.0];
-        let point_f: Vec<Fsize> = vec![3.0];
-        
+		let point_c: Vec<Fsize> = vec![0.5, 3.5, 1.5];
+		let point_d: Vec<Fsize> = vec![2.4, 2.0, 1.4];
+		let point_e: Vec<Fsize> = vec![1.0, 2.0, 0.0];
+		let point_f: Vec<Fsize> = vec![3.0];
+
 		let vec_a: Vec<Fsize> = vec![3.0, 4.0, 4.0, 4.0];
 		let vec_b: Vec<Fsize> = vec![1.5, 4.0, 2.0];
-        let vec_c: Vec<Fsize> = vec![0.5, 0.5, 0.5];
-        let vec_d: Vec<Fsize> = vec![1.0, 1.0, 1.0];
-        let vec_e: Vec<Fsize> = vec![0.0];
-        let vec_f: Vec<Fsize> = vec![3.0, 4.0, 1.0];
+		let vec_c: Vec<Fsize> = vec![0.5, 0.5, 0.5];
+		let vec_d: Vec<Fsize> = vec![1.0, 1.0, 1.0];
+		let vec_e: Vec<Fsize> = vec![0.0];
+		let vec_f: Vec<Fsize> = vec![3.0, 4.0, 1.0];
 
 		let result = std::panic::catch_unwind(|| point_e.point_plus_vector(&vec_e));
-        let result_2 = std::panic::catch_unwind(|| point_f.point_plus_vector(&vec_f));
+		let result_2 = std::panic::catch_unwind(|| point_f.point_plus_vector(&vec_f));
 
 		assert_eq!(vec![4.0, 6.0, 7.0, 4.0], point_a.point_plus_vector(&vec_a));
 		assert_eq!(vec![5.0, 6.0, 3.0], point_b.point_plus_vector(&vec_b));
-        assert_eq!(vec![1.0, 4.0, 2.0], point_c.point_plus_vector(&vec_c));
-        assert_eq!(vec![3.4, 3.0, 2.4], point_d.point_plus_vector(&vec_d));
+		assert_eq!(vec![1.0, 4.0, 2.0], point_c.point_plus_vector(&vec_c));
+		assert_eq!(vec![3.4, 3.0, 2.4], point_d.point_plus_vector(&vec_d));
 		assert!(result.is_err());
-        assert!(result_2.is_err());
+		assert!(result_2.is_err());
 	}
 }
