@@ -31,6 +31,7 @@ pub trait VectorOps<Rhs, A> {
 	fn vec_add(&self, rhs: &Rhs) -> Vec<Self::Output>;
 	fn dot(&self, rhs: &Rhs) -> Self::Output;
 }
+
 pub trait VecScalingProjection<Rhs> {
 	type Output;
 	fn magnitude(&self) -> Self::Output;
@@ -44,6 +45,11 @@ pub trait MatrixOperations<Rhs, Rhs2, Rhs3> {
 	fn matrix_mult_matrix(&self, rhs: &Rhs) -> Vec<Vec<Self::Output>>;
 	fn matrix_mult_point(&self, rhs: &Rhs2) -> Vec<Self::Output>;
 	fn scaler_mult_matrix(&self, rhs: Rhs3) -> Vec<Vec<Self::Output>>;
+}
+
+pub trait TwoDimMatrixOps<Rhs> {
+	type Output;
+	fn matrix_two_dim_rotate(&self, wheta: Rhs, homogeneous_flag: bool) -> Vec<Self::Output>;
 }
 
 pub trait PointOperations<Rhs, Rhs2> {
