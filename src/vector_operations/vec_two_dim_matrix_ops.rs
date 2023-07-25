@@ -9,7 +9,6 @@ where
 	type Output = T;
 
 	fn matrix_two_dim_rotate(&self, theta_rad: T, homogeneous_flag: bool) -> Vec<T> {
-		_ = std::f32::consts::PI;
 		if homogeneous_flag && self.len() != 3 {
 			panic!("Homogeneous 2 dim vector is of size 3");
 		} else if !homogeneous_flag && self.len() != 2 {
